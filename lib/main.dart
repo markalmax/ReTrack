@@ -14,6 +14,12 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.from(colorScheme: const ColorScheme.light()),
+      darkTheme: ThemeData.from(colorScheme: const ColorScheme.dark()),
+      themeMode: ThemeMode.dark,
+      home: Scaffold(),
+    );
   }
 }
