@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 import 'package:retrack/Services/media_scanner.dart';
+import 'package:retrack/Screens/song.dart';
 
 class SongsPage extends StatefulWidget {
   SongsPage({super.key});
-  List<SongModel>? songs = null;
 
   @override
   State<SongsPage> createState() => _SongsPageState();
@@ -14,9 +14,11 @@ class SongsPage extends StatefulWidget {
 
 class _SongsPageState extends State<SongsPage> {
   late Future<List<SongModel>?> _list;
+  List<SongModel>? songs;
 
   @override
-  initState() {
+  void initState() {
+    super.initState();
     final scanner = MediaScanner();
     _list = scanner.getAllSongs();
   }
@@ -68,15 +70,25 @@ class _SongsPageState extends State<SongsPage> {
                 future: _list,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
-                    widget.songs = snapshot.data;
-                    if (widget.songs != null && widget.songs!.isNotEmpty) {
+                    songs = snapshot.data;
+                    if (songs != null && songs!.isNotEmpty) {
                       return ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: widget.songs!.length,
+                        itemCount: songs!.length,
                         itemBuilder: (_, index) {
                           return ListTile(
-                            title: Text(widget.songs![index].title),
+                            title: Text(songs![index].title),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          SongDetailsPage(song: songs![index]),
+                                ),
+                              );
+                            },
                           );
                         },
                       );
