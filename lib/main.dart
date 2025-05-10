@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const StartPage());
+  runApp(StartPage());
 }
 
 class StartPage extends StatefulWidget {
-  const StartPage({super.key});
+  StartPage({super.key});
+  final Map<int, String> pageNames = {
+    0: 'Home',
+    1: 'Music',
+    2: 'Albums',
+    3: 'Playlists',
+  };
 
   @override
   State<StartPage> createState() => _StartPageState();
@@ -21,6 +27,10 @@ class _StartPageState extends State<StartPage> {
       darkTheme: ThemeData.from(colorScheme: const ColorScheme.dark()),
       themeMode: ThemeMode.dark,
       home: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(widget.pageNames[selectedIndex]!),
+        ),
         bottomNavigationBar: NavigationBar(
           destinations: [
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
