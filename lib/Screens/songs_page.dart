@@ -28,43 +28,43 @@ class _SongsPageState extends State<SongsPage> {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(14.0),
-        child: Column(
-          children: [
-            SearchAnchor(
-              builder: (context, controller) {
-                return SearchBar(
-                  controller: controller,
-                  onTap: () {
-                    controller.openView();
-                  },
-                  onChanged: (_) {
-                    controller.openView();
-                  },
-                  leading: const Icon(Icons.search),
-                );
-              },
-              suggestionsBuilder: (context, controller) {
-                return List<ListTile>.generate(5, (int index) {
-                  final String item = 'item $index';
-                  return ListTile(
-                    title: Text(item),
-                    onTap: () {
-                      setState(() {
-                        controller.closeView(item);
-                      });
-                    },
-                  );
-                });
-              },
-            ),
-            Expanded(
-              child: FutureBuilder(
-                future: _list,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    songs = snapshot.data;
-                    if (songs != null && songs!.isNotEmpty) {
-                      return ListView.builder(
+        child: FutureBuilder(
+          future: _list,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              songs = snapshot.data;
+              if (songs != null && songs!.isNotEmpty) {
+                return Column(
+                  children: [
+                    SearchAnchor(
+                      builder: (context, controller) {
+                        return SearchBar(
+                          controller: controller,
+                          onTap: () {
+                            controller.openView();
+                          },
+                          onChanged: (_) {
+                            controller.openView();
+                          },
+                          leading: const Icon(Icons.search),
+                        );
+                      },
+                      suggestionsBuilder: (context, controller) {
+                        return List<ListTile>.generate(5, (int index) {
+                          final String item = 'item $index';
+                          return ListTile(
+                            title: Text(item),
+                            onTap: () {
+                              setState(() {
+                                controller.closeView(item);
+                              });
+                            },
+                          );
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemCount: songs!.length,
@@ -106,21 +106,21 @@ class _SongsPageState extends State<SongsPage> {
                             title: Text(songs![index].title),
                           );
                         },
-                      );
-                    } else {
-                      print("data: ");
-                      print(snapshot.data);
-                      return Text("Sorry");
-                    }
-                  } else {
-                    print("Data2: ");
-                    print(snapshot.data);
-                    return Text("Sorry");
-                  }
-                },
-              ),
-            ),
-          ],
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                print("data: ");
+                print(snapshot.data);
+                return Text("Sorry");
+              }
+            } else {
+              print("Data2: ");
+              print(snapshot.data);
+              return Text("Sorry");
+            }
+          },
         ),
       ),
     );
