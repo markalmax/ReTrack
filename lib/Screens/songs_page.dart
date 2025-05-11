@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:on_audio_query/on_audio_query.dart';
-
 import 'package:retrack/Services/media_scanner.dart';
 import 'package:retrack/Screens/song.dart';
 
@@ -13,6 +11,7 @@ class SongsPage extends StatefulWidget {
 }
 
 class _SongsPageState extends State<SongsPage> {
+  final OnAudioQuery _audioQuery = OnAudioQuery();
   late Future<List<SongModel>?> _list;
   List<SongModel>? songs;
 

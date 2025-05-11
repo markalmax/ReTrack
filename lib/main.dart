@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:retrack/Screens/songs_page.dart';
+import 'package:retrack/Screens/playlist_page.dart';
 
 void main() {
   runApp(StartPage());
@@ -51,7 +51,12 @@ class _StartPageState extends State<StartPage> {
           },
         ),
         body:
-            [Container(), SongsPage(), Container(), Container()][selectedIndex],
+            [
+              Container(),
+              SongsPage(),
+              Container(),
+              PlaylistPage(),
+            ][selectedIndex],
       ),
     );
   }
