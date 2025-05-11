@@ -87,17 +87,31 @@ class _SongsPageState extends State<SongsPage> {
                                 nullArtworkWidget: Icon(Icons.music_note),
                               ),
                             ),
+                            trailing: PopupMenuButton(
+                              onSelected: (value) {
+                                switch (value) {
+                                  case "details":
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => SongDetailsPage(
+                                              song: songs![index],
+                                            ),
+                                      ),
+                                    );
+                                  default:
+                                }
+                              },
+                              itemBuilder:
+                                  (context) => <PopupMenuItem<String>>[
+                                    const PopupMenuItem(
+                                      value: "details",
+                                      child: Text("Details"),
+                                    ),
+                                  ],
+                            ),
                             title: Text(songs![index].title),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) =>
-                                          SongDetailsPage(song: songs![index]),
-                                ),
-                              );
-                            },
                           );
                         },
                       );
