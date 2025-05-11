@@ -78,6 +78,15 @@ class _SongsPageState extends State<SongsPage> {
                         itemCount: songs!.length,
                         itemBuilder: (_, index) {
                           return ListTile(
+                            leading: SizedBox(
+                              width: 50,
+                              child: QueryArtworkWidget(
+                                id: songs![index].id,
+                                artworkBorder: BorderRadius.circular(7),
+                                type: ArtworkType.AUDIO,
+                                nullArtworkWidget: Icon(Icons.music_note),
+                              ),
+                            ),
                             title: Text(songs![index].title),
                             onTap: () {
                               Navigator.push(
