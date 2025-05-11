@@ -33,6 +33,11 @@ dependencies:
   english_words: ^4.0.0
   provider: ^6.1.2
   cupertino_icons: ^1.0.8
+  on_audio_query:
+    git:
+      url: https://github.com/CopticFelo/on_audio_query.git
+      path: packages/on_audio_query/
+  permission_handler: ^12.0.0+1
 
 dev_dependencies:
   flutter_test:
