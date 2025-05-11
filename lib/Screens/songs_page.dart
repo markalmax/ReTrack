@@ -57,14 +57,6 @@ class _SongsPageState extends State<SongsPage> {
                 });
               },
             ),
-            // TextButton(
-            //   onPressed: () async {
-            //     final scanner = MediaScanner();
-            //     List<SongModel>? trackList = await scanner.getAllSongs();
-            //     print(trackList);
-            //   },
-            //   child: Text("Scan musik"),
-            // ),
             Expanded(
               child: FutureBuilder(
                 future: _list,
