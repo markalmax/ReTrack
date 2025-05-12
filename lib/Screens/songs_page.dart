@@ -113,7 +113,11 @@ class _SongsPageState extends State<SongsPage> {
                                   ),
                                 ],
                           ),
-                          title: Text(songs![index].title),
+                          title: Text(
+                            songs![index].title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         );
                       },
                     ),
