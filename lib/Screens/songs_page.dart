@@ -118,6 +118,11 @@ class _SongsPageState extends State<SongsPage> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
+                          subtitle: Text(
+                            songs![index].artist ?? "",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         );
                       },
                     ),
