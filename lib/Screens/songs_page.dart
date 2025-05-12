@@ -58,7 +58,11 @@ class _SongsPageState extends State<SongsPage> {
                               .toList();
                       return result.map(
                         (song) => ListTile(
-                          title: Text(song.title),
+                          title: Text(
+                            song.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           leading: SizedBox(
                             width: 50,
                             child: QueryArtworkWidget(
