@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:retrack/Services/media_scanner.dart';
 import 'package:retrack/Screens/song.dart';
+import 'package:retrack/Screens/playlist.dart';
 
 class PlaylistPage extends StatefulWidget {
   const PlaylistPage({super.key});
@@ -35,41 +36,54 @@ class _PlaylistPageState extends State<PlaylistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: playlists.length,
-        itemBuilder: (context, index) {
-          final playlist = playlists[index];
-          return ListTile(
-            leading: const Icon(Icons.queue_music),
-            title: Text(playlist.playlist),
-            subtitle: Text('${playlist.numOfSongs} songs'),
-            onTap: () {},
-            onLongPress: () async {
-              bool delete = await showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Delete Playlist'),
-                    content: const Text(
-                      'Are you sure you want to delete this playlist?',
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(true),
-                        child: const Text('Delete'),
-                      ),
-                    ],
+      body:
+          playlists.isEmpty
+              ? const Center(child: Text('No playlists found.'))
+              : ListView.builder(
+                itemCount: playlists.length,
+                itemBuilder: (context, index) {
+                  final playlist = playlists[index];
+                  return ListTile(
+                    leading: const Icon(Icons.queue_music),
+                    title: Text(playlist.playlist),
+                    subtitle: Text('${playlist.numOfSongs} songs'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  PlaylistDetails(playlistId: playlist.id),
+                        ),
+                      );
+                    },
+                    onLongPress: () async {
+                      bool delete = await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Delete Playlist'),
+                            content: const Text(
+                              'Are you sure you want to delete this playlist?',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed:
+                                    () => Navigator.of(context).pop(true),
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      if (delete) {
+                        _audioQuery.removePlaylist(playlist.id);
+                        _fetchPlaylists();
+                      }
+                    },
                   );
                 },
-              );
-              if (delete) {
-                _audioQuery.removePlaylist(playlist.id);
-                _fetchPlaylists();
-              }
-            },
-          );
-        },
-      ),
+              ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           String? playlistName = await showDialog<String>(

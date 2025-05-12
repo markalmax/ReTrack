@@ -12,7 +12,7 @@ class SongsPage extends StatefulWidget {
 
 class _SongsPageState extends State<SongsPage> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
-  late Future<List<SongModel>?> _list;
+  late Future<List<SongModel>> _list;
   List<SongModel>? songs;
 
   @override
