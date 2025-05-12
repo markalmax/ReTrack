@@ -50,17 +50,29 @@ class _SongsPageState extends State<SongsPage> {
                         );
                       },
                       suggestionsBuilder: (context, controller) {
-                        return List<ListTile>.generate(5, (int index) {
-                          final String item = 'item $index';
-                          return ListTile(
-                            title: Text(item),
-                            onTap: () {
-                              setState(() {
-                                controller.closeView(item);
-                              });
-                            },
-                          );
-                        });
+                        final text = controller.text.toLowerCase();
+                        final result =
+                            songs!
+                                .where(
+                                  (song) =>
+                                      song.title.toLowerCase().contains(text),
+                                )
+                                .toList();
+                        return result.map(
+                          (song) => ListTile(
+                            title: Text(song.title),
+                            leading: SizedBox(
+                              width: 50,
+                              child: QueryArtworkWidget(
+                                id: song.id,
+                                artworkBorder: BorderRadius.circular(7),
+                                type: ArtworkType.AUDIO,
+                                nullArtworkWidget: Icon(Icons.music_note),
+                              ),
+                            ),
+                            onTap: () => controller.closeView(song.title),
+                          ),
+                        );
                       },
                     ),
                     Expanded(
