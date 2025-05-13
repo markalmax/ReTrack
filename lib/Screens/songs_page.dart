@@ -139,9 +139,19 @@ class _SongsPageState extends State<SongsPage> {
               return Text("Sorry");
             }
           } else {
-            print("Data2: ");
-            print(snapshot.data);
-            return Text("Sorry");
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 16,
+                  children: const [
+                    Text("Searching for Audio Files"),
+                    LinearProgressIndicator(value: null),
+                  ],
+                ),
+              ),
+            );
           }
         },
       ),
