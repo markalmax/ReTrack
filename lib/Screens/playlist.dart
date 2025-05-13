@@ -14,6 +14,7 @@ class PlaylistDetails extends StatefulWidget {
 class _PlaylistDetailsState extends State<PlaylistDetails> {
   late Future<List<SongModel>> _songsInPlaylist;
   PlaylistModel? playlistData;
+  bool playlistNotFound = false;
   late MediaScanner scanner;
 
   @override
@@ -31,11 +32,18 @@ class _PlaylistDetailsState extends State<PlaylistDetails> {
     final playlist = await scanner.getPlaylistData(widget.playlistId);
     setState(() {
       playlistData = playlist;
+      playlistNotFound = playlist == null;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (playlistNotFound) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Playlist Not Found')),
+        body: const Center(child: Text('This playlist does not exist.')),
+      );
+    }
     return Scaffold(
       appBar: AppBar(title: Text(playlistData?.playlist ?? 'New Playlist')),
       body: FutureBuilder<List<SongModel>>(

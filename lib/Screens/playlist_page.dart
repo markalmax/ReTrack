@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:retrack/Services/media_scanner.dart';
-import 'package:retrack/Screens/song.dart';
 import 'package:retrack/Screens/playlist.dart';
+//import 'package:retrack/Screens/song.dart';
 
 class PlaylistPage extends StatefulWidget {
   const PlaylistPage({super.key});
@@ -12,8 +12,8 @@ class PlaylistPage extends StatefulWidget {
 }
 
 class _PlaylistPageState extends State<PlaylistPage> {
-  final OnAudioQuery _audioQuery = OnAudioQuery();
-  late Future<List<SongModel>> _list;
+  //final OnAudioQuery _audioQuery = OnAudioQuery();
+  //late Future<List<SongModel>?> _list;
   late List<SongModel> songs;
   List<PlaylistModel> playlists = [];
   late MediaScanner scanner;
@@ -22,14 +22,14 @@ class _PlaylistPageState extends State<PlaylistPage> {
   void initState() {
     super.initState();
     scanner = MediaScanner();
-    _list = scanner.getAllSongs();
+    //_list = scanner.getAllSongs();
     _fetchPlaylists();
   }
 
   Future<void> _fetchPlaylists() async {
     final result = await scanner.getAllPlaylists();
     setState(() {
-      playlists = result;
+      playlists = result!.where((p) => p.id != 0).toList();
     });
   }
 
@@ -56,6 +56,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                   PlaylistDetails(playlistId: playlist.id),
                         ),
                       );
+                      print(playlist.id);
+                      print(playlist.playlist);
                     },
                     onLongPress: () async {
                       bool delete = await showDialog(
@@ -76,9 +78,15 @@ class _PlaylistPageState extends State<PlaylistPage> {
                           );
                         },
                       );
-                      if (delete) {
-                        _audioQuery.removePlaylist(playlist.id);
-                        _fetchPlaylists();
+                      if (delete == true) {
+                        final result = await scanner.removePlaylist(
+                          playlist.id,
+                        );
+                        if (result == true) {
+                          _fetchPlaylists();
+                        } else {
+                          print("Failed to delete playlist");
+                        }
                       }
                     },
                   );
@@ -100,7 +108,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
             },
           );
           if (playlistName != null && playlistName.trim().isNotEmpty) {
-            await _audioQuery.createPlaylist(playlistName.trim());
+            await scanner.createPlaylist(playlistName.trim());
             _fetchPlaylists();
           }
         },

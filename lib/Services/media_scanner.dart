@@ -1,50 +1,66 @@
+import 'dart:io' show Platform;
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MediaScanner {
   final OnAudioQuery _audioQuery = OnAudioQuery();
-  Future<List<SongModel>> getAllSongs() async {
-    if (await Permission.audio.request().isGranted ||
-        await Permission.storage.request().isGranted) {
+  Future<List<SongModel>?> getAllSongs() async {
+    if (await getPermission()) {
       final OnAudioQuery query = OnAudioQuery();
       return await query.querySongs();
     } else {
       print(await Permission.audio.status);
-      return [];
+      return null;
     }
   }
 
-  Future<List<PlaylistModel>> getAllPlaylists() async {
-    // Check permissions before querying playlists
-    if (await Permission.audio.request().isGranted ||
-        await Permission.storage.request().isGranted) {
+  Future<bool> getPermission() async {
+    if (Platform.isAndroid) {
+      return await Permission.storage.request().isGranted;
+    } else if (Platform.isIOS) {
+      return await Permission.mediaLibrary.request().isGranted;
+    } else {
+      return false;
+    }
+  }
+
+  Future<List<PlaylistModel>?> getAllPlaylists() async {
+    if (await getPermission()) {
       return await _audioQuery.queryPlaylists();
     } else {
       print(await Permission.audio.status);
-      return [];
+      return null;
     }
   }
 
-  Future<PlaylistModel> getPlaylistData(int playlistId) async {
-    if (await Permission.audio.request().isGranted ||
-        await Permission.storage.request().isGranted) {
+  Future<PlaylistModel?> getPlaylistData(int playlistId) async {
+    if (await getPermission()) {
       final playlists = await _audioQuery.queryPlaylists();
-      final playlist = playlists.firstWhere(
-        (p) => p.id == playlistId,
-        orElse:
-            () => PlaylistModel({
-              '_id': playlistId,
-              '_data': '',
-              'name': 'Unknown Playlist',
-              'date_added': 0,
-              'date_modified': 0,
-              'date_modified_android': 0,
-              'owner_package_name': '',
-              'audio_count': 0,
-            }),
-      );
-      return playlist;
+      final playlist = playlists.where((p) => p.id == playlistId).toList();
+      if (playlist.isNotEmpty) {
+        return playlist.first;
+      } else {
+        return null;
+      }
+    } else {
+      print(await Permission.audio.status);
+      return null;
     }
-    throw Exception('Permission not granted to access playlists.');
+  }
+
+  Future<bool> createPlaylist(String name) async {
+    if (await getPermission()) {
+      final result = await _audioQuery.createPlaylist(name);
+      return result;
+    }
+    return false;
+  }
+
+  Future<bool> removePlaylist(int playlistId) async {
+    if (await getPermission()) {
+      final result = await _audioQuery.removePlaylist(playlistId);
+      return result;
+    }
+    return false;
   }
 }
