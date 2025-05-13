@@ -31,7 +31,35 @@ class _SongsPageState extends State<SongsPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             songs = snapshot.data;
-            if (songs != null && songs!.isNotEmpty) {
+            if (songs == null) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 10,
+                    children: const [
+                      Icon(Icons.heart_broken, size: 100),
+                      Text("Please Grant Permissions to access music files."),
+                    ],
+                  ),
+                ),
+              );
+            } else if (songs!.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 10,
+                    children: const [
+                      Icon(Icons.sentiment_dissatisfied, size: 100),
+                      Text("Couldn't find any audio files."),
+                    ],
+                  ),
+                ),
+              );
+            } else {
               return Column(
                 children: [
                   SearchAnchor(
@@ -132,20 +160,6 @@ class _SongsPageState extends State<SongsPage> {
                     ),
                   ),
                 ],
-              );
-            } else {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 10,
-                    children: const [
-                      Icon(Icons.sentiment_dissatisfied, size: 100),
-                      Text("Couldn't find any audio files."),
-                    ],
-                  ),
-                ),
               );
             }
           } else {
