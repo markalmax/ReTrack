@@ -16,7 +16,8 @@ class MediaScanner {
 
   Future<bool> getPermission() async {
     if (Platform.isAndroid) {
-      return await Permission.storage.request().isGranted;
+      return await Permission.storage.request().isGranted ||
+          await Permission.audio.request().isGranted;
     } else if (Platform.isIOS) {
       return await Permission.mediaLibrary.request().isGranted;
     } else {
