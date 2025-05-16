@@ -132,6 +132,78 @@ class _SongsPageState extends State<SongsPage> {
                                           ),
                                     ),
                                   );
+                                case "addplaylist":
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      final scanner = MediaScanner();
+                                      return FutureBuilder<
+                                        List<PlaylistModel>?
+                                      >(
+                                        future: scanner.getAllPlaylists(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData ||
+                                              snapshot.data == null ||
+                                              snapshot.data!.isEmpty) {
+                                            return AlertDialog(
+                                              title: Text("Add to Playlist"),
+                                              content: Text(
+                                                "No playlists found.",
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                      ),
+                                                  child: Text("Close"),
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                          final playlists = snapshot.data!;
+                                          return AlertDialog(
+                                            title: Text("Add to Playlist"),
+                                            content: SizedBox(
+                                              width: double.maxFinite,
+                                              child: ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: playlists.length,
+                                                itemBuilder: (context, idx) {
+                                                  final playlist =
+                                                      playlists[idx];
+                                                  return ListTile(
+                                                    title: Text(
+                                                      playlist.playlist,
+                                                    ),
+                                                    onTap: () async {
+                                                      final added = await scanner
+                                                          .addSongToPlaylist(
+                                                            playlist.id,
+                                                            songs![index].id,
+                                                          );
+                                                      Navigator.pop(context);
+                                                      ScaffoldMessenger.of(
+                                                        context,
+                                                      ).showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            added
+                                                                ? 'Song added to "${playlist.playlist}"'
+                                                                : 'Failed to add song.',
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  );
                                 default:
                               }
                             },
@@ -140,6 +212,10 @@ class _SongsPageState extends State<SongsPage> {
                                   const PopupMenuItem(
                                     value: "details",
                                     child: Text("Details"),
+                                  ),
+                                  const PopupMenuItem(
+                                    value: "addplaylist",
+                                    child: Text("Add to Playlist"),
                                   ),
                                 ],
                           ),

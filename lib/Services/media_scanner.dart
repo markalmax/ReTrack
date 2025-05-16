@@ -63,4 +63,11 @@ class MediaScanner {
     }
     return false;
   }
+
+  Future<bool> addSongToPlaylist(int playlistId, int songId) async {
+    if (await getPermission()) {
+      return await _audioQuery.addToPlaylist(playlistId, songId);
+    }
+    return false;
+  }
 }
