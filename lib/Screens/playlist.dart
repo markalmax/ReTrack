@@ -76,10 +76,6 @@ class _PlaylistDetailsState extends State<PlaylistDetails> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }
