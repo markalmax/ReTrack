@@ -1,6 +1,7 @@
 import 'dart:io' show Platform;
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class MediaScanner {
   final OnAudioQuery _audioQuery = OnAudioQuery();
@@ -15,9 +16,14 @@ class MediaScanner {
   }
 
   Future<bool> getPermission() async {
+    final deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
-      return await Permission.storage.request().isGranted ||
-          await Permission.audio.request().isGranted;
+      final androidInfo = await deviceInfo.androidInfo;
+      if (androidInfo.version.sdkInt >= 33) {
+        return await Permission.manageExternalStorage.request().isGranted;
+      } else {
+        return await Permission.storage.request().isGranted;
+      }
     } else if (Platform.isIOS) {
       return await Permission.mediaLibrary.request().isGranted;
     } else {

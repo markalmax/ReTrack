@@ -150,15 +150,6 @@ class _SongsPageState extends State<SongsPage> {
                                               content: Text(
                                                 "No playlists found.",
                                               ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed:
-                                                      () => Navigator.pop(
-                                                        context,
-                                                      ),
-                                                  child: Text("Close"),
-                                                ),
-                                              ],
                                             );
                                           }
                                           final playlists = snapshot.data!;

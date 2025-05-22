@@ -29,7 +29,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
   Future<void> _fetchPlaylists() async {
     final result = await scanner.getAllPlaylists();
     setState(() {
-      playlists = result!.where((p) => p.id != 0).toList();
+      playlists = result!.toList();
     });
   }
 
