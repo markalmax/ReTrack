@@ -5,6 +5,26 @@ import 'package:device_info_plus/device_info_plus.dart';
 
 class MediaScanner {
   final OnAudioQuery _audioQuery = OnAudioQuery();
+
+  Future<bool> getPermission() async {
+    final deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      bool externalStoragePermission = false;
+      externalStoragePermission =
+          await Permission.manageExternalStorage.request().isGranted;
+      if (androidInfo.version.sdkInt >= 33) {
+        return await Permission.audio.request().isGranted &&
+            externalStoragePermission;
+      }
+      return await Permission.storage.request().isGranted;
+    } else if (Platform.isIOS) {
+      return await Permission.mediaLibrary.request().isGranted;
+    } else {
+      return false;
+    }
+  }
+
   Future<List<SongModel>?> getAllSongs() async {
     if (await getPermission()) {
       final OnAudioQuery query = OnAudioQuery();
@@ -12,22 +32,6 @@ class MediaScanner {
     } else {
       print(await Permission.audio.status);
       return null;
-    }
-  }
-
-  Future<bool> getPermission() async {
-    final deviceInfo = DeviceInfoPlugin();
-    if (Platform.isAndroid) {
-      final androidInfo = await deviceInfo.androidInfo;
-      if (androidInfo.version.sdkInt >= 33) {
-        return await Permission.manageExternalStorage.request().isGranted;
-      } else {
-        return await Permission.storage.request().isGranted;
-      }
-    } else if (Platform.isIOS) {
-      return await Permission.mediaLibrary.request().isGranted;
-    } else {
-      return false;
     }
   }
 

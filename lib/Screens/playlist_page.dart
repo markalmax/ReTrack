@@ -60,7 +60,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                       print(playlist.playlist);
                     },
                     onLongPress: () async {
-                      bool delete = await showDialog(
+                      final delete = await showDialog(
                         context: context,
                         builder: (context) {
                           return AlertDialog(
